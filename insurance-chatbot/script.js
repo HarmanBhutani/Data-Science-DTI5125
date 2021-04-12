@@ -73,34 +73,30 @@ $(document).ready(function () {
 
 
 	//------------------------------------------- Call the RASA API--------------------------------------
-	function send(text) {
-
-
+	function send(message) {
+		console.log("User Message:", message)
 		$.ajax({
-			url: 'http://localhost:8000', //  RASA API
+			url: 'http://localhost:5055/webhook/',
 			type: 'POST',
-			headers: {
-				// 'Content-Type': 'application/json'
-			},
+			contentType: 'application/json',
 			data: JSON.stringify({
-				"query": text
+				"add_message": message,
+			
 			}),
-			success: function (data, textStatus, xhr) {
-				console.log(data);
-				setBotResponse(data);
-
+			success: function (data, textStatus) {
+				if(data != null){
+						setBotResponse(data);
+				}
+				console.log("Rasa Response: ", data, "\n Status:", textStatus)
 			},
-			error: function (xhr, textStatus, errorThrown) {
-				console.log('Error in Operation');
-				setBotResponse('error');
+			error: function (errorMessage) {
+				setBotResponse("");
+				console.log('Error' + errorMessage);
+	
 			}
 		});
-
-
-
-
-
 	}
+	
 
 
 	//------------------------------------ Set bot response in result_div -------------------------------------
